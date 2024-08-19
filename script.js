@@ -4,7 +4,11 @@ const liste = document.querySelector("ul")
 function newElement() {
     var inputValue = input.value.trim();
     if (inputValue !== "") {
+
+        let id = Date.now();
+
         let item = {
+            id:id,
             text: inputValue,
             status: false // Başlangıçta tamamlanmamış olarak ayarlayalım
         };
@@ -26,6 +30,7 @@ function newElement() {
 function addListitem(item) {
     let li = document.createElement('li');
     li.textContent = item.text;
+    li.setAttribute('data-id', item.id);
 
     if (item.status) {
         li.classList.add('checked');
@@ -63,14 +68,9 @@ function createDeleteButton(item) {
         this.parentElement.remove();
         $("#liveToastDelete").toast('show');
 
-        // LocalStorage'dan öğeyi sil
         let items = JSON.parse(localStorage.getItem('items')) || [];
-        const valueToRemove = item;
-        const indexToRemove = items.indexOf(valueToRemove);
-        if (indexToRemove !== -1) {
-            items.splice(indexToRemove, 1);
-            localStorage.setItem('items', JSON.stringify(items));
-        }
+        items = items.filter(i => i.id !== item.id);
+        localStorage.setItem('items', JSON.stringify(items));
     });
 
 
@@ -86,7 +86,7 @@ function createDeleteButton(item) {
 
 function updateLocalStorage(item) {
     let items = JSON.parse(localStorage.getItem('items')) || [];
-    const indexToUpdate = items.findIndex(i => i.text === item.text);
+    const indexToUpdate = items.findIndex(i => i.id === item.id);
     if (indexToUpdate !== -1) {
         items[indexToUpdate].status = item.status;
         localStorage.setItem('items', JSON.stringify(items));
