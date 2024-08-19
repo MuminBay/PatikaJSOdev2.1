@@ -1,6 +1,23 @@
 const input = document.getElementById("task")
 const liste = document.querySelector("ul")
 
+
+window.onload = function () {
+   if (!sessionStorage.getItem('pageRefreshed')){
+       localStorage.clear();
+   }
+
+   sessionStorage.setItem('pageRefreshed', 'true');
+
+
+    let items = JSON.parse(localStorage.getItem('items')) || [];
+    items.forEach(function (item) {
+        addListitem(item);
+    });
+};
+
+
+
 function newElement() {
     var inputValue = input.value.trim();
     if (inputValue !== "") {
@@ -10,7 +27,7 @@ function newElement() {
         let item = {
             id:id,
             text: inputValue,
-            status: false // Başlangıçta tamamlanmamış olarak ayarlayalım
+            status: false
         };
 
         addListitem(item);
@@ -93,12 +110,7 @@ function updateLocalStorage(item) {
     }
 }
 
-window.onload = function(){
-    let items = JSON.parse(localStorage.getItem('items')) || [];
-    items.forEach(function (item) {
-        addListitem(item);
-    });
-}
+
 
 document.addEventListener("keydown", function(event) {
     if(event.key === "Enter"){
