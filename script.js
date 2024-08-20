@@ -3,17 +3,19 @@ const liste = document.querySelector("ul")
 
 
 window.onload = function () {
-   if (!sessionStorage.getItem('pageRefreshed')){
-       localStorage.clear();
-   }
-
-   sessionStorage.setItem('pageRefreshed', 'true');
-
+    if (!sessionStorage.getItem('pageRefreshed')) {
+        localStorage.clear();
+    }
 
     let items = JSON.parse(localStorage.getItem('items')) || [];
+    items = items.filter(item => item.text.trim() !== "");
+    localStorage.setItem('items', JSON.stringify(items));
+
     items.forEach(function (item) {
         addListitem(item);
     });
+
+    sessionStorage.setItem('pageRefreshed', 'true');
 };
 
 
